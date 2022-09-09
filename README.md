@@ -11,7 +11,7 @@ These charts are provided as-is with no warranties.
 Once Helm is set up properly, add the repo as follows:
 
 ```shell
-helm repo add stevehipwell https://jamurtag.github.io/helm-charts/
+helm repo add jamurtag https://jamurtag.github.io/helm-charts/
 helm repo update
 ```
 
