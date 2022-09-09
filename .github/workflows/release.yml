@@ -1,11 +1,11 @@
 name: Release Charts
 
 on:
-  push:
+  pull_request:
+    types:
+      - closed
     branches:
       - main
-    paths:
-      - charts/*/Chart.yaml
 
 jobs:
   release:
