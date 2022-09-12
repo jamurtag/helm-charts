@@ -30,6 +30,9 @@ spec:
       serviceAccountName: {{ include "cloudflare-tunnel.fullname" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- with .Values.priorityClassName }}
+      priorityClassName: {{ . | quote }}
+      {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
