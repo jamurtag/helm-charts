@@ -59,6 +59,13 @@ securityContext:
     - ALL
   readOnlyRootFilesystem: true
 
+# Pod Disruption Budget
+podDisruptionBudget:
+  enabled: false
+  minAvailable: 
+  maxUnavailable: 
+
+# Priority Class
 priorityClassName: ""
 
 resources: {}
