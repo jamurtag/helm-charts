@@ -28,8 +28,7 @@ image:
   repository: cloudflare/cloudflared
   pullPolicy: IfNotPresent
   # If supplied, this overrides "appVersion"
-  # tag added as a temporary fix before multi-arch images provided, otherwise appVersion defaults to an invalid tag
-  tag: "2022.9.0-amd64"
+  tag: ""
 
 replicaCount: 2
 
