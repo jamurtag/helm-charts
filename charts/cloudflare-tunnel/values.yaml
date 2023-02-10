@@ -12,6 +12,12 @@ cloudflare:
   secret: ""
   # If true, turn on WARP routing for TCP
   enableWarp: false
+  # Protocol used to connect to Cloudflare network
+  protocol: auto
+  # Standard loglevel
+  logLevel: info
+  # Transport protocol loglevel
+  transportLogLevel: warn
   # Define ingress rules for the tunnel. See
   # https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/configuration/configuration-file/ingress
   ingress: []
