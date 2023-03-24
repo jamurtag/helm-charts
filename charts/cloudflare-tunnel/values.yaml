@@ -2,15 +2,9 @@
 
 # Cloudflare parameters.
 cloudflare:
-  # Your Cloudflare account number.
-  account: ""
-  # The name of the tunnel this instance will serve
+  # The name of the tunnel
   tunnelName: ""
-  # The ID of the above tunnel.
-  tunnelId: ""
-  # The secret for the tunnel.
-  secret: ""
-  # If true, turn on WARP routing for TCP
+  # If true, turn on WARP routing for TCP, UDP, ICMP
   enableWarp: false
   # Protocol used to connect to Cloudflare network
   protocol: auto
@@ -41,6 +35,9 @@ replicaCount: 2
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
+
+# Kubernetes secret must be created externally
+secretName: cloudflare-tunnel
 
 serviceAccount:
   # Annotations to add to the service account
