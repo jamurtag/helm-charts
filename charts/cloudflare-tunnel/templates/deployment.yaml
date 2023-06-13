@@ -1,9 +1,8 @@
-# Here we deploy cloudflared images. The tunnel credentials are stored in
-# a k8s secret, and the configuration is stored in a k8s configmap.
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "cloudflare-tunnel.fullname" . }}
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "cloudflare-tunnel.labels" . | nindent 4 }}
 spec:
@@ -13,12 +12,14 @@ spec:
       {{- include "cloudflare-tunnel.selectorLabels" . | nindent 6 }}
   template:
     metadata:
+      # Only local mode requires a configMap and secret, roll deployment when these change
+      {{- if eq .Values.tunnelMode "local" }}
       annotations:
-        # These are here so the deployment rolls when the config or secret change.
         checksum/configmap: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
         {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
+      {{- end }}
       labels:
         {{- include "cloudflare-tunnel.selectorLabels" . | nindent 8 }}
     spec:
@@ -39,37 +40,52 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
+            # local mode requires configuration and credentials stored in configMap / secret volumes
+            {{- if eq .Values.tunnelMode "local" }}
             - tunnel
-            # Points cloudflared to the config file, which configures what
-            # cloudflared will actually do. This file is created by a ConfigMap.
             - --config
             - /etc/cloudflared/config/config.yaml
             - run
+            # remote mode requires args passed directly to cloudflared
+            # cloudflared uses a distroless image so doesn't support env vars (for tunnel token)
+            {{- else }}
+            - tunnel
+            - --protocol
+            - {{ .Values.cloudflare.protocol }}
+            - --loglevel
+            - {{ .Values.cloudflare.logLevel }}
+            - --transport-loglevel
+            - {{ .Values.cloudflare.transportLogLevel }}
+            - --metrics
+            - 0.0.0.0:2000
+            - run
+            - --token
+            - {{ .Values.cloudflare.tunnelToken }}
+            {{- end }}
           ports:
             - name: metrics
               containerPort: 2000
               protocol: TCP
           livenessProbe:
             httpGet:
-              # Cloudflared has a /ready endpoint which returns 200 if and only if
-              # it has an active connection to the edge.
               path: /ready
               port: 2000
             failureThreshold: 1
             initialDelaySeconds: 10
             periodSeconds: 10
+          # only local mode requires configMap / secret volumes
+          {{- if eq .Values.tunnelMode "local" }}
           volumeMounts:
             - name: config
               mountPath: /etc/cloudflared/config
               readOnly: true
-            # Each tunnel has an associated "credentials file" which authorizes machines
-            # to run the tunnel. cloudflared will read this file from its local filesystem,
-            # and it'll be stored in a k8s secret.
             - name: creds
               mountPath: /etc/cloudflared/creds
               readOnly: true
+          {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+      {{- if eq .Values.tunnelMode "local" }}
       volumes:
         - name: creds
           secret:
@@ -80,6 +96,7 @@ spec:
             items:
               - key: config.yaml
                 path: config.yaml
+      {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

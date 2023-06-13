@@ -3,6 +3,7 @@ apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
   name: {{ include "cloudflare-tunnel.fullname" . }}
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "cloudflare-tunnel.labels" . | nindent 4 }}
 spec:

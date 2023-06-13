@@ -1,8 +1,10 @@
-# This configmap stores the configuration used by cloudflared.
+# A configmap is used for local tunnel configuration mode.
+{{- if eq .Values.tunnelMode "local" }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ include "cloudflare-tunnel.fullname" . }}
+  namespace: {{ .Release.Namespace }}
 data:
   config.yaml: |
     # Tunnel name
@@ -30,3 +32,4 @@ data:
       {{- end }}
       # catch-all rule responds with HTTP 404
       - service: http_status:404
+{{- end }}
