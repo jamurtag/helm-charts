@@ -2,6 +2,17 @@ apiVersion: v1
 entries:
   cloudflare-tunnel:
   - apiVersion: v2
+    appVersion: 2023.5.1
+    created: "2023-06-13T08:53:08.8730485Z"
+    description: Creation of a cloudflared deployment - a reverse tunnel for an environment
+    digest: a9a3dbc899246f8e3590ad5378f28adea0e1a4aba86ce1715f94a16b54bfe7dc
+    icon: https://developers.cloudflare.com/cloudflare-one/favicon-32x32.png
+    name: cloudflare-tunnel
+    type: application
+    urls:
+    - https://github.com/jamurtag/helm-charts/releases/download/cloudflare-tunnel-0.7.0/cloudflare-tunnel-0.7.0.tgz
+    version: 0.7.0
+  - apiVersion: v2
     appVersion: 2023.4.0
     created: "2023-04-11T09:54:41.756396286Z"
     description: Creation of a cloudflared deployment - a reverse tunnel for an environment
@@ -67,4 +78,4 @@ entries:
     urls:
     - https://github.com/jamurtag/helm-charts/releases/download/cloudflare-tunnel-0.1.0/cloudflare-tunnel-0.1.0.tgz
     version: 0.1.0
-generated: "2023-04-11T09:54:41.756416487Z"
+generated: "2023-06-13T08:53:08.8731778Z"
