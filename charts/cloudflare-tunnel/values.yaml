@@ -4,13 +4,13 @@
 cloudflare:
   # Tunnel name
   tunnelName: ""
-  # Tunnel config mode - local or remote
-  # Local mode requires cloudflared configuration and credentials be supplied locally, via configMap
-  # and secret volumes mounts respectively. Remote mode requires configuration via the Cloudflare API
-  # (i.e., via the Terraform cloudflare_tunnel_config resource) and tunnel runtime authentication is
-  # passed via the token returned from tunnel creation.
+  # Tunnel config mode - local or cloudflare
+  # 'local' mode requires cloudflared configuration and credentials be supplied locally, via configMap
+  # and secret volumes mounts respectively. 'cloudflare' mode requires configuration via the
+  # Cloudflare API (i.e., via the Terraform cloudflare_tunnel_config resource) and tunnel runtime
+  # authentication is passed via the token returned from tunnel creation.
   tunnelMode: local
-  # Tunnel token used to authenticate tunnel startup in remote mode
+  # Tunnel token used to authenticate tunnel startup in cloudflare mode
   # Cannot be read from a secret into an env var as cloudflared uses a distroless image
   tunnelToken: ""
   # If true, turn on WARP routing for TCP, UDP, ICMP
@@ -21,7 +21,7 @@ cloudflare:
   logLevel: info
   # Transport protocol loglevel
   transportLogLevel: warn
-  # Define tunnel ingress rules - only applicable for local tunnel config mode
+  # Define tunnel ingress rules - only applicable for local configuration mode
   # see https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/configuration/configuration-file/ingress
   ingress: []
     # The first rule proxies traffic to the httpbin sample service named web-server at port 80
