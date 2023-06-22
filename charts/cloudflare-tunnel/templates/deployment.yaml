@@ -40,13 +40,13 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
-            # local mode requires configuration and credentials stored in configMap / secret volumes
+            # 'local' mode requires configuration and credentials stored in configMap / secret volumes
             {{- if eq .Values.tunnelMode "local" }}
             - tunnel
             - --config
             - /etc/cloudflared/config/config.yaml
             - run
-            # remote mode requires args passed directly to cloudflared
+            # 'cloudflare' mode requires args passed directly to cloudflared
             # cloudflared uses a distroless image so doesn't support env vars (for tunnel token)
             {{- else }}
             - tunnel
