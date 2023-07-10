@@ -1,5 +1,5 @@
 # A configmap is used for local tunnel configuration mode.
-{{- if eq .Values.tunnelMode "local" }}
+{{- if eq .Values.cloudflare.tunnelMode "local" }}
 apiVersion: v1
 kind: ConfigMap
 metadata:

@@ -13,7 +13,7 @@ spec:
   template:
     metadata:
       # Only local mode requires a configMap and secret, roll deployment when these change
-      {{- if eq .Values.tunnelMode "local" }}
+      {{- if eq .Values.cloudflare.tunnelMode "local" }}
       annotations:
         checksum/configmap: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
         {{- with .Values.podAnnotations }}
@@ -41,7 +41,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             # 'local' mode requires configuration and credentials stored in configMap / secret volumes
-            {{- if eq .Values.tunnelMode "local" }}
+            {{- if eq .Values.cloudflare.tunnelMode "local" }}
             - tunnel
             - --config
             - /etc/cloudflared/config/config.yaml
@@ -74,7 +74,7 @@ spec:
             initialDelaySeconds: 10
             periodSeconds: 10
           # only local mode requires configMap / secret volumes
-          {{- if eq .Values.tunnelMode "local" }}
+          {{- if eq .Values.cloudflare.tunnelMode "local" }}
           volumeMounts:
             - name: config
               mountPath: /etc/cloudflared/config
@@ -85,7 +85,7 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-      {{- if eq .Values.tunnelMode "local" }}
+      {{- if eq .Values.cloudflare.tunnelMode "local" }}
       volumes:
         - name: creds
           secret:
